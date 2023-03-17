@@ -1,0 +1,25 @@
+{
+    "name": "tr_ingest_ecdc_data",
+    "properties": {
+        "description": "This trigger will run the pipeline which is responsible for ingesting the data from GitHub to the Data Lake.",
+        "annotations": [],
+        "runtimeState": "Started",
+        "pipelines": [
+            {
+                "pipelineReference": {
+                    "referenceName": "pl_ingest_ecdc_data",
+                    "type": "PipelineReference"
+                }
+            }
+        ],
+        "type": "ScheduleTrigger",
+        "typeProperties": {
+            "recurrence": {
+                "frequency": "Minute",
+                "interval": 60,
+                "startTime": "2023-03-17T22:11:00Z",
+                "timeZone": "UTC"
+            }
+        }
+    }
+}

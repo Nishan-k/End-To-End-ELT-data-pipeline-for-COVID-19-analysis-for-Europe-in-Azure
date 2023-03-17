@@ -1,0 +1,208 @@
+{
+    "name": "pl_ingest_population_data",
+    "properties": {
+        "description": "This pipeline will be responsible to ingest the data from the Azure Blob Storage to the Data Lake.",
+        "activities": [
+            {
+                "name": "Test the availability of the data in Azure Blob Storage",
+                "description": "This validation ensures that there are files in the Azure Blob Storage.",
+                "type": "Validation",
+                "dependsOn": [],
+                "userProperties": [],
+                "typeProperties": {
+                    "dataset": {
+                        "referenceName": "ds_population_raw_data_blolb_storage_gzip",
+                        "type": "DatasetReference"
+                    },
+                    "timeout": "0.12:00:00",
+                    "sleep": 10
+                }
+            },
+            {
+                "name": "Get the Metadata",
+                "description": "This operation will extract the metadata of the file once the validation has been successful.",
+                "type": "GetMetadata",
+                "dependsOn": [
+                    {
+                        "activity": "Test the availability of the data in Azure Blob Storage",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "dataset": {
+                        "referenceName": "ds_population_raw_data_blolb_storage_gzip",
+                        "type": "DatasetReference"
+                    },
+                    "fieldList": [
+                        "columnCount",
+                        "exists"
+                    ],
+                    "storeSettings": {
+                        "type": "AzureBlobStorageReadSettings",
+                        "recursive": true,
+                        "enablePartitionDiscovery": false
+                    },
+                    "formatSettings": {
+                        "type": "DelimitedTextReadSettings"
+                    }
+                }
+            },
+            {
+                "name": "Check the column count",
+                "description": "So, this condition checks whether the file we are receiving has the desired number of columns or not.",
+                "type": "IfCondition",
+                "dependsOn": [
+                    {
+                        "activity": "Get the Metadata",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "userProperties": [],
+                "typeProperties": {
+                    "expression": {
+                        "value": "@equals(activity('Get the Metadata').output.columnCount,13)",
+                        "type": "Expression"
+                    },
+                    "ifFalseActivities": [
+                        {
+                            "name": "Send an EMAIL",
+                            "description": "so, if the condition of the column count won't match, it will send and E-mail",
+                            "type": "WebActivity",
+                            "dependsOn": [],
+                            "policy": {
+                                "timeout": "0.12:00:00",
+                                "retry": 0,
+                                "retryIntervalInSeconds": 30,
+                                "secureOutput": false,
+                                "secureInput": false
+                            },
+                            "userProperties": [],
+                            "typeProperties": {
+                                "url": "abc@gmail.com",
+                                "method": "POST",
+                                "body": "The data passed from Azure Blob Storage for population data has more columns than expected, go and check the files."
+                            }
+                        }
+                    ],
+                    "ifTrueActivities": [
+                        {
+                            "name": "Copy the population data",
+                            "description": "So, once the condition is true, this activity will copy the data from Blob Storage to the Data Lake",
+                            "type": "Copy",
+                            "dependsOn": [],
+                            "policy": {
+                                "timeout": "0.12:00:00",
+                                "retry": 0,
+                                "retryIntervalInSeconds": 30,
+                                "secureOutput": false,
+                                "secureInput": false
+                            },
+                            "userProperties": [
+                                {
+                                    "name": "Source",
+                                    "value": "population//population_by_age.tsv.gz"
+                                },
+                                {
+                                    "name": "Destination",
+                                    "value": "processed/population/"
+                                }
+                            ],
+                            "typeProperties": {
+                                "source": {
+                                    "type": "DelimitedTextSource",
+                                    "storeSettings": {
+                                        "type": "AzureBlobStorageReadSettings",
+                                        "recursive": true,
+                                        "enablePartitionDiscovery": false
+                                    },
+                                    "formatSettings": {
+                                        "type": "DelimitedTextReadSettings"
+                                    }
+                                },
+                                "sink": {
+                                    "type": "DelimitedTextSink",
+                                    "storeSettings": {
+                                        "type": "AzureBlobFSWriteSettings"
+                                    },
+                                    "formatSettings": {
+                                        "type": "DelimitedTextWriteSettings",
+                                        "quoteAllText": true,
+                                        "fileExtension": ".txt"
+                                    }
+                                },
+                                "enableStaging": false,
+                                "translator": {
+                                    "type": "TabularTranslator",
+                                    "typeConversion": true,
+                                    "typeConversionSettings": {
+                                        "allowDataTruncation": true,
+                                        "treatBooleanAsNumber": false
+                                    }
+                                }
+                            },
+                            "inputs": [
+                                {
+                                    "referenceName": "ds_population_raw_data_blolb_storage_gzip",
+                                    "type": "DatasetReference"
+                                }
+                            ],
+                            "outputs": [
+                                {
+                                    "referenceName": "ds_population_raw_data_data_lake_tsv",
+                                    "type": "DatasetReference"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Delete1",
+                            "type": "Delete",
+                            "dependsOn": [
+                                {
+                                    "activity": "Copy the population data",
+                                    "dependencyConditions": [
+                                        "Succeeded"
+                                    ]
+                                }
+                            ],
+                            "policy": {
+                                "timeout": "0.12:00:00",
+                                "retry": 0,
+                                "retryIntervalInSeconds": 30,
+                                "secureOutput": false,
+                                "secureInput": false
+                            },
+                            "userProperties": [],
+                            "typeProperties": {
+                                "dataset": {
+                                    "referenceName": "ds_population_raw_data_blolb_storage_gzip",
+                                    "type": "DatasetReference"
+                                },
+                                "enableLogging": false,
+                                "storeSettings": {
+                                    "type": "AzureBlobStorageReadSettings",
+                                    "recursive": true,
+                                    "enablePartitionDiscovery": false
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        ],
+        "annotations": [],
+        "lastPublishTime": "2023-03-17T19:02:34Z"
+    },
+    "type": "Microsoft.DataFactory/factories/pipelines"
+}
