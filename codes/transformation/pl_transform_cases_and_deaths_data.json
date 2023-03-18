@@ -1,0 +1,37 @@
+{
+    "name": "pl_transform_cases_and_deaths_data",
+    "properties": {
+        "description": "This pipeline will make use of the Data flow which will transform the cases and deaths data.",
+        "activities": [
+            {
+                "name": "df_transform_cases_and_deaths_data",
+                "description": "This pipeline will execute the data flow to transform the cases and deaths data",
+                "type": "ExecuteDataFlow",
+                "dependsOn": [],
+                "policy": {
+                    "timeout": "0.12:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "dataflow": {
+                        "referenceName": "df_transform_cases_and_deaths_data",
+                        "type": "DataFlowReference"
+                    },
+                    "compute": {
+                        "coreCount": 8,
+                        "computeType": "General"
+                    },
+                    "traceLevel": "Fine"
+                }
+            }
+        ],
+        "folder": {
+            "name": "transform"
+        },
+        "annotations": []
+    }
+}

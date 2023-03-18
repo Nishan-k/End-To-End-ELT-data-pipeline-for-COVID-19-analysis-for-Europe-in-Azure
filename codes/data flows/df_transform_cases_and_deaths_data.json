@@ -1,0 +1,130 @@
+{
+    "name": "df_transform_cases_and_deaths_data",
+    "properties": {
+        "description": "This data flow will be responsible for transforming cases and deaths data.",
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "ds_cases_and_deaths_data_source",
+                        "type": "DatasetReference"
+                    },
+                    "name": "CasesAndDeathData",
+                    "description": "This is the raw data which will be transformed."
+                },
+                {
+                    "dataset": {
+                        "referenceName": "ds_country_lookup_data",
+                        "type": "DatasetReference"
+                    },
+                    "name": "LookupCases",
+                    "description": "This data will be used as a LookUp to pull the 2_digit column for the countries"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "ds_cases_and_deaths_data_sink",
+                        "type": "DatasetReference"
+                    },
+                    "name": "CaseAndDeathDataSink",
+                    "description": "Now, finally all the data will be saved in the sink after going through all the transformations."
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "FilterOnlyEuropeData",
+                    "description": "This filter will only select data for the European country"
+                },
+                {
+                    "name": "SelectRequiredColumns",
+                    "description": "After the data has been filtered, only select the necessary columns."
+                },
+                {
+                    "name": "SplitTheColumns",
+                    "description": "Convert the indicator columns into two columns."
+                },
+                {
+                    "name": "LookUpCountry",
+                    "description": "It will perform the join based on the country name."
+                },
+                {
+                    "name": "SelectDataForSink",
+                    "description": "Finally, we will only select the columns that we want to save in the Sink destination."
+                }
+            ],
+            "scriptLines": [
+                "source(output(",
+                "          country as string,",
+                "          country_code as string,",
+                "          continent as string,",
+                "          population as integer,",
+                "          indicator as string,",
+                "          daily_count as short,",
+                "          date as date,",
+                "          rate_14_day as double,",
+                "          source as string",
+                "     ),",
+                "     allowSchemaDrift: true,",
+                "     validateSchema: false,",
+                "     ignoreNoFilesFound: false) ~> CasesAndDeathData",
+                "source(output(",
+                "          country as string,",
+                "          country_code_2_digit as string,",
+                "          country_code_3_digit as string,",
+                "          continent as string,",
+                "          population as string",
+                "     ),",
+                "     allowSchemaDrift: true,",
+                "     validateSchema: false,",
+                "     ignoreNoFilesFound: false) ~> LookupCases",
+                "CasesAndDeathData filter(continent==\"Europe\" && not(isNull(country_code))) ~> FilterOnlyEuropeData",
+                "FilterOnlyEuropeData select(mapColumn(",
+                "          country,",
+                "          country_code_3_digit = country_code,",
+                "          population,",
+                "          indicator,",
+                "          daily_count,",
+                "          reported_date = date,",
+                "          source",
+                "     ),",
+                "     skipDuplicateMapInputs: true,",
+                "     skipDuplicateMapOutputs: true) ~> SelectRequiredColumns",
+                "SelectRequiredColumns pivot(groupBy(country,",
+                "          country_code_3_digit,",
+                "          population,",
+                "          reported_date,",
+                "          source),",
+                "     pivotBy(indicator, ['confirmed cases', 'deaths']),",
+                "     counts = sum(daily_count),",
+                "     columnNaming: '$V_$N',",
+                "     lateral: true) ~> SplitTheColumns",
+                "SplitTheColumns, LookupCases lookup(SplitTheColumns@country == LookupCases@country,",
+                "     multiple: false,",
+                "     pickup: 'any',",
+                "     broadcast: 'auto')~> LookUpCountry",
+                "LookUpCountry select(mapColumn(",
+                "          country = SplitTheColumns@country,",
+                "          country_code_3_digit = SplitTheColumns@country_code_3_digit,",
+                "          country_code_2_digit,",
+                "          population = SplitTheColumns@population,",
+                "          cases_count = {confirmed cases_counts},",
+                "          death_count = deaths_counts,",
+                "          reported_date,",
+                "          source",
+                "     ),",
+                "     skipDuplicateMapInputs: true,",
+                "     skipDuplicateMapOutputs: true) ~> SelectDataForSink",
+                "SelectDataForSink sink(allowSchemaDrift: true,",
+                "     validateSchema: false,",
+                "     truncate: true,",
+                "     umask: 0022,",
+                "     preCommands: [],",
+                "     postCommands: [],",
+                "     skipDuplicateMapInputs: true,",
+                "     skipDuplicateMapOutputs: true) ~> CaseAndDeathDataSink"
+            ]
+        }
+    }
+}

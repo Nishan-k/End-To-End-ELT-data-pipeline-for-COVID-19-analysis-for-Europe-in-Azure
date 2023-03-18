@@ -54,10 +54,14 @@ The data used for the project is of Europe. The data has been extracted from Eur
     </li>
     </ol>
     <li>Data Transformation</li>
+    <ol type='a'>
+    <li><a href="#dataflow"> <b>Transformation using Data Flow</b> </a></li>
+    </ol>
 </ol>
+<h2>1. Data Ingestion </h2>
+<h3 id ="populationdata">a. Ingest Population data from Azure Blob Storage to Azure Data Lake:</h3>
+<p>First, we are ingesting the data from Azure Blob Storage to the raw folder in Azure Data Lake.</p>
 
-<h3 id ="populationdata">1. Ingest Population data from Azure Blob Storage to Azure Data Lake:</h3>
-First, we are ingesting the data from Azure Blob Storage to the raw folder in Azure Data Lake.
 <br>
 <br>
 <b>Pipeline to ingest data from Azure Blob Storage for population data:</b>
@@ -75,7 +79,7 @@ First, we are ingesting the data from Azure Blob Storage to the raw folder in Az
     <p>Here, we will check the number of columns, if the number of columns is greated than 13, then it is an error, the number of columns we are expecting for our dataset to have is 13. So, if the dataset has more than 13 columns, we will send an E-mail notifying us that the data has more number of columns. Else, if the condition matches, we will copy the data to the DataLake Gen-2 in the raw/population folder and then delete it once it has been copied to clean up the space.</p>
 </ol>
 <br>
-<h3 id ="ecdcdata">2. Ingest ECDC data from GitHub to Azure Data Lake using HTTP linked-service:</h3>
+<h3 id ="ecdcdata">b. Ingest ECDC data from GitHub to Azure Data Lake using HTTP linked-service:</h3>
 <p>In total we will be ingesting 4 files:
     <ul>
         <li> COVID-19 new cases and deaths by country
@@ -104,4 +108,13 @@ First, we are ingesting the data from Azure Blob Storage to the raw folder in Az
 
 For this pipeline to be executed, I have created a scheduled trigger that would execute the pipeline to ingest the ECDC data every hour without an end date.
 
-<img src="./images/3.ecdc trigger .png" alt="DE-workflow" title="Data Pipeline Worflow"><br>
+<img src="./images/3.ecdc trigger .png" alt="trigger"><br>
+
+<h2> 2. Data Transformation </h2>
+<h3 id="dataflow"> a. Transformation using Data flow </h3>
+<p>1. Transforming cases and deaths data using Data Flow in Azure Data Factory.
+
+<b>Data flow for cases and deaths transformation: </b>
+<img src="./images/2.dataflow for casesanddeaths.png" alt="dataflow"><br>
+
+Here, the dataset goes through multiple transformation phases, and finally the processed data is stored in Data Lake/processed folder.
