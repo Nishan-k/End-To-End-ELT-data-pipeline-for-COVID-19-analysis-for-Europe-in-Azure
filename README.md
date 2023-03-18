@@ -48,9 +48,9 @@ The data used for the project is of Europe. The data has been extracted from Eur
 <ol>
     <li>Data Ingestion</li>
     <ol type='a'>
-        <li><a href="#populationdata"> <b>Ingest Population data from Azure Blob Storage to Azure Data Lake </a></b></li>
+        <li><a href="populationdata"> <b>Ingest Population data from Azure Blob Storage to Azure Data Lake </a></b></li>
     </li>
-    <li><a href="#ecdcdata"> <b>Ingest ECDC data from GitHub to Azure Data Lake </a></b></li>
+    <li><a href="ecdcdata"> <b>Ingest ECDC data from GitHub to Azure Data Lake </a></b></li>
     </li>
     </ol>
     <li>Data Transformation</li>
