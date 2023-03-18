@@ -48,15 +48,15 @@ The data used for the project is of Europe. The data has been extracted from Eur
 <ol>
     <li>Data Ingestion</li>
     <ol type='a'>
-        <li><a href="populationdata"> <b>Ingest Population data from Azure Blob Storage to Azure Data Lake </a></b></li>
+        <li><a href="#populationdata"> <b>Ingest Population data from Azure Blob Storage to Azure Data Lake </a></b></li>
     </li>
-    <li><a href="ecdcdata"> <b>Ingest ECDC data from GitHub to Azure Data Lake </a></b></li>
+    <li><a href="#ecdcdata"> <b>Ingest ECDC data from GitHub to Azure Data Lake </a></b></li>
     </li>
     </ol>
     <li>Data Transformation</li>
 </ol>
 
-<h3 id ="#populationdata">1. Ingest Population data from Azure Blob Storage to Azure Data Lake:</h3>
+<h3 id ="populationdata">1. Ingest Population data from Azure Blob Storage to Azure Data Lake:</h3>
 First, we are ingesting the data from Azure Blob Storage to the raw folder in Azure Data Lake.
 <br>
 <br>
@@ -75,7 +75,7 @@ First, we are ingesting the data from Azure Blob Storage to the raw folder in Az
     <p>Here, we will check the number of columns, if the number of columns is greated than 13, then it is an error, the number of columns we are expecting for our dataset to have is 13. So, if the dataset has more than 13 columns, we will send an E-mail notifying us that the data has more number of columns. Else, if the condition matches, we will copy the data to the DataLake Gen-2 in the raw/population folder and then delete it once it has been copied to clean up the space.</p>
 </ol>
 <br>
-<h3 id ="#ecdcdata">2. Ingest ECDC data from GitHub to Azure Data Lake using HTTP linked-service:</h3>
+<h3 id ="ecdcdata">2. Ingest ECDC data from GitHub to Azure Data Lake using HTTP linked-service:</h3>
 <p>In total we will be ingesting 4 files:
     <ul>
         <li> COVID-19 new cases and deaths by country
