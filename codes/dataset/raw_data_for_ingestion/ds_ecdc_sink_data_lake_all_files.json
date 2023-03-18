@@ -1,0 +1,36 @@
+{
+    "name": "ds_ecdc_sink_data_lake_all_files",
+    "properties": {
+        "linkedServiceName": {
+            "referenceName": "ls_azure_data_lake_gen_2",
+            "type": "LinkedServiceReference"
+        },
+        "parameters": {
+            "fileName": {
+                "type": "string"
+            }
+        },
+        "folder": {
+            "name": "raw data for ingestion"
+        },
+        "annotations": [],
+        "type": "DelimitedText",
+        "typeProperties": {
+            "location": {
+                "type": "AzureBlobFSLocation",
+                "fileName": {
+                    "value": "@dataset().fileName",
+                    "type": "Expression"
+                },
+                "folderPath": "ECDC",
+                "fileSystem": "raw"
+            },
+            "columnDelimiter": ",",
+            "escapeChar": "\\",
+            "firstRowAsHeader": true,
+            "quoteChar": "\""
+        },
+        "schema": []
+    },
+    "type": "Microsoft.DataFactory/factories/datasets"
+}

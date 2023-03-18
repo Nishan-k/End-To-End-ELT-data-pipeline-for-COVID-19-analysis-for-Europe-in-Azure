@@ -1,0 +1,29 @@
+{
+    "name": "ds_population_raw_data_blob_storage_gzip",
+    "properties": {
+        "description": "This is the dataset for the population data which is currently residing in the azure blob storage account.\n",
+        "linkedServiceName": {
+            "referenceName": "ls_azure_blob_storage",
+            "type": "LinkedServiceReference"
+        },
+        "folder": {
+            "name": "raw data for ingestion"
+        },
+        "annotations": [],
+        "type": "DelimitedText",
+        "typeProperties": {
+            "location": {
+                "type": "AzureBlobStorageLocation",
+                "fileName": "population_by_age.tsv.gz",
+                "container": "population"
+            },
+            "columnDelimiter": "\t",
+            "compressionCodec": "gzip",
+            "escapeChar": "\\",
+            "firstRowAsHeader": true,
+            "quoteChar": "\""
+        },
+        "schema": []
+    },
+    "type": "Microsoft.DataFactory/factories/datasets"
+}
