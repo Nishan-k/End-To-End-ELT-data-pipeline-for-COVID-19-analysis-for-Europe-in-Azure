@@ -112,7 +112,7 @@ For this pipeline to be executed, I have created a scheduled trigger that would 
 
 <h2> 2. Data Transformation </h2>
 <h3 id="dataflow"> a. Transformation using Data flow </h3>
-<p>1. Transforming cases and deaths data using Data Flow in Azure Data Factory.
+<p><b>1. Transforming cases and deaths data using Data Flow in Azure Data Factory.</b></p>
 
 <b>Data flow for cases and deaths transformation: </b>
 <img src="./images/2.dataflow for casesanddeaths.png" alt="dataflow"><br>
