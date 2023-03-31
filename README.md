@@ -120,3 +120,4 @@ For this pipeline to be executed, I have created a scheduled trigger that would 
 Here, the dataset goes through multiple transformation phases, and finally the processed data is stored in Data Lake/processed folder.
 
 <p>2. Transforming Hospital Admissions data using Data flow </p>
+<img src="./images/3.dataflow for hospital data transformation.png" alt="dataflow"><br>
