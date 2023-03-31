@@ -135,3 +135,7 @@ In total, I have created 3 tables: <br>
 <p>5. Visualize the data </p>
 Connecting to Azure SQL database from Tableau:
 <img src="./images/connection.png" alt="dataflow"><br>
+
+<h3>Dashboard Visualizing Cases and Death Counts Per Country </h3>
+<iframe src="https://public.tableau.com/app/profile/nishan.karki/viz/covidreporting/CovidCaseandDeathAnalysis?publish=yes"
+ width="800" height="600" frameborder="0"></iframe>
