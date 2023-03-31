@@ -140,3 +140,6 @@ Connecting to Azure SQL database from Tableau:
 
 <img src="./images/casesanddeaths.png" alt="dataflow"><br>
 <img src="./images/casesanddeaths2.png" alt="dataflow"><br>
+
+<h3>Dashboard Visualizing Covid testing Vs Active Cases Per Country </h3>
+<img src="./images/casesandtests.png" alt="dataflow"><br>
