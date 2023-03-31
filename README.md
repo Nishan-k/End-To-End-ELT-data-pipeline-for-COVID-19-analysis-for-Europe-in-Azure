@@ -127,7 +127,7 @@ Here, the dataset goes through multiple transformation phases, and finally the p
 Here, I have mounted Databricks with Azure Data lake, and then transformed the Population data and then stored back to the Data Lake in Processed folder.
 
 <p>4. Copying the final clean data to the Azure SQL database </p>
-In total, I have create 3 tables: <br>
+In total, I have created 3 tables: <br>
 - cases and deaths <br>
 - hospital admissions daily <br>
 - testing (COVID testing) 
