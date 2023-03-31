@@ -143,3 +143,4 @@ Connecting to Azure SQL database from Tableau:
 
 <h3>Dashboard Visualizing Covid testing Vs Active Cases Per Country </h3>
 <img src="./images/casesandtests.png" alt="dataflow"><br>
+
