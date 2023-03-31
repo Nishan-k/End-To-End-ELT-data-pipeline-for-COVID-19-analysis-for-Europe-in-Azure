@@ -121,3 +121,17 @@ Here, the dataset goes through multiple transformation phases, and finally the p
 
 <p>2. Transforming Hospital Admissions data using Data flow </p>
 <img src="./images/3.dataflow for hospital data transformation.png" alt="dataflow"><br>
+
+<p>3. Transforming Population data using Data Bricks </p>
+
+Here, I have mounted Databricks with Azure Data lake, and then transformed the Population data and then stored back to the Data Lake in Processed folder.
+
+<p>4. Copying the final clean data to the Azure SQL database </p>
+In total, I have create 3 tables: <br>
+- cases and deaths <br>
+- hospital admissions daily <br>
+- testing (COVID testing) 
+
+<p>5. Visualize the data </p>
+Connecting to Azure SQL database from Tableau:
+<img src="./images/connection.png" alt="dataflow"><br>
